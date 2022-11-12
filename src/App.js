@@ -14,7 +14,7 @@ function App() {
   const [joinBooks, setJoinBooks] = useState([]);
   const [mapBooks, setMapBooks] = useState(new Map());
 
-// TODO: access data from the BooksAPI that Udacity provided. This is necessary for the book searches.
+  // TODO: access data from the BooksAPI that Udacity provided. This is necessary for the book searches.
 
   useEffect(() => {
     BooksAPI.getAll().then((data) => {
@@ -23,7 +23,7 @@ function App() {
     });
   }, []);
 
-// TODO: Map over all the books provided in the API to select the correct ones according to the search
+  // TODO: Map over all the books provided in the API to select the correct ones according to the search
 
   useEffect(() => {
     const combined = searchBooks.map((book) => {
@@ -36,8 +36,8 @@ function App() {
     setJoinBooks(combined);
   }, [searchBooks]);
 
-// TODO: Makes the search page blank if there are no successful search matches and restores it 
-// to blank when the search is complete.
+  // TODO: Makes the search page blank if there are no successful search matches and restores it
+  // to blank when the search is complete.
 
   useEffect(() => {
     let isActive = true;
@@ -65,18 +65,13 @@ function App() {
     return map;
   };
 
-// TODO: Updates which shelf the book is on and keeps the state when browser is refreshed.
+  // TODO: Updates which shelf the book is on and keeps the state when browser is refreshed.
 
   const updateBookShelf = (book, whereTo) => {
-    const updatedBooks = books.map((b) => {
-      if (b.id === book.id) {
-        book.shelf = whereTo;
-        return book;
-      }
-      return b;
-    });
-    setBooks(updatedBooks);
-    BooksAPI.update(book, whereTo);
+    BooksAPI.update(book, whereTo).then(() => {
+      book.shelf = whereTo;
+      setBooks(books.filter(b => b.id !== book.id).concat(book));
+    })
   };
 
   return (
